@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reaction Time Game ⚡</title>
+
+<style>
+    body {
+        background-color: #fff176;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 100px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    #box {
+        margin: 50px auto;
+        width: 300px;
+        height: 200px;
+        background-color: #fbc02d;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    #box.wait {
+        background-color: #f57f17;
+    }
+
+    #box.click {
+        background-color: #ffeb3b;
+    }
+
+    #result {
+        font-size: 24px;
+        margin-top: 20px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 18px;
+        background: black;
+        color: yellow;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>⚡ Reaction Time Game</h1>
+
+<button onclick="startGame()">Start Game</button>
+
+<div id="box">Click Start</div>
+
+<div id="result"></div>
+
+<script>
+let startTime, timeout;
+let waiting = false;
+
+function startGame() {
+    const box = document.getElementById("box");
+    const result = document.getElementById("result");
+
+    result.innerHTML = "";
+    box.innerHTML = "WAIT...";
+    box.className = "wait";
+    waiting = true;
+
+    let delay = Math.random() * 3000 + 2000;
+
+    timeout = setTimeout(() => {
+        box.innerHTML = "CLICK!";
+        box.className = "click";
+        startTime = new Date().getTime();
+        waiting = false;
+    }, delay);
+}
+
+document.getElementById("box").onclick = function () {
+    const result = document.getElementById("result");
+
+    if (waiting) {
+        clearTimeout(timeout);
+        result.innerHTML = "❌ Too Early! Try again.";
+        this.innerHTML = "Click Start";
+        this.className = "";
+        return;
+    }
+
+    if (!startTime) return;
+
+    let reactionTime = new Date().getTime() - startTime;
+
+    let message = "";
+
+    if (reactionTime < 200) message = "😎 GODLIKE!";
+    else if (reactionTime < 300) message = "🔥 Very Fast!";
+    else if (reactionTime < 500) message = "🙂 Decent!";
+    else message = "🐢 Too slow!";
+
+    result.innerHTML = `⏱️ ${reactionTime} ms <br>${message}`;
+
+    this.innerHTML = "Click Start";
+    this.className = "";
+    startTime = null;
+};
+</script>
+
+</body>
+</html>
